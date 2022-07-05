@@ -3,41 +3,29 @@ package delivery
 import (
 	"gin_produk/config"
 	"gin_produk/delivery/controller"
-	"gin_produk/repo"
-	"gin_produk/usecase"
+	"gin_produk/manager"
 
 	"github.com/gin-gonic/gin"
 )
 
 type appServer struct {
-	productUc  usecase.CreateProductUsecase
-	listProduk usecase.AllProductUsecase
-	engine     *gin.Engine
-	host       string
+	// productUc  usecase.CreateProductUsecase
+	// listProduk usecase.AllProductUsecase
+
+	useCaseManager manager.UseCaseManager
+
+	engine *gin.Engine
+	host   string
 }
 
 //nambain run biar bisa diakses dari luar
 
-func (a *appServer) iniController() {
-	controller.NewProductController(a.engine, a.productUc, a.listProduk)
-}
-
-func (a *appServer) Run() {
-	a.iniController()
-	err := a.engine.Run(a.host)
-	if err != nil {
-		panic(err)
-	}
-}
-
 func Server() *appServer {
 	r := gin.Default()
 
-	productRepo := repo.NewProductRepository()
+	repoManager := manager.NewRepositoryManager()
 
-	productUc := usecase.NewCreateProductUseCase(productRepo)
-
-	listProdukUc := usecase.NewAllProductUsecase(productRepo)
+	useCaseManager := manager.NewUseCaseManager(repoManager)
 
 	// apiHost := os.Getenv("API_HOST")
 	//host localhost
@@ -50,9 +38,20 @@ func Server() *appServer {
 	// host := fmt.Sprintf("%s:%s", apiHost, apiPort)
 
 	return &appServer{
-		productUc:  productUc,
-		listProduk: listProdukUc,
-		engine:     r,
-		host:       host,
+		useCaseManager: useCaseManager,
+		engine:         r,
+		host:           host,
+	}
+}
+
+func (a *appServer) iniController() {
+	controller.NewProductController(a.engine, a.useCaseManager.CreateProductUseCase(), a.useCaseManager.ListProductUseCase())
+}
+
+func (a *appServer) Run() {
+	a.iniController()
+	err := a.engine.Run(a.host)
+	if err != nil {
+		panic(err)
 	}
 }
