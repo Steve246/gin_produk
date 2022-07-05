@@ -6,14 +6,14 @@ import (
 )
 
 type AllProductUsecase interface {
-	displayAll() []model.Product
+	DisplayAll() []model.Product
 }
 
 type allProductUsecase struct {
 	repo repo.ProductRepository
 }
 
-func (c *allProductUsecase) displayAll() []model.Product {
+func (c *allProductUsecase) DisplayAll() []model.Product {
 
 	alldata := c.repo.RetrieveData()
 

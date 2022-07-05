@@ -19,7 +19,7 @@ type ProductController struct {
 
 func (p *ProductController) Retrieve(c *gin.Context) {
 
-	products := p.ucListProduct
+	products := p.ucListProduct.DisplayAll()
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "list of products",
