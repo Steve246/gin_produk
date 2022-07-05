@@ -4,15 +4,15 @@ import "gin_produk/model"
 
 type ProductRepository interface {
 	Add(newProduct *model.Product) error
-	RetrieveData() []model.Product
+	Retrieve() ([]model.Product, error)
 }
 
 type productRepository struct {
 	productDb []model.Product
 }
 
-func (c *productRepository) RetrieveData() []model.Product {
-	return c.productDb
+func (c *productRepository) Retrieve() ([]model.Product, error) {
+	return c.productDb, nil
 }
 
 func (p *productRepository) Add(newProduct *model.Product) error {

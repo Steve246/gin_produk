@@ -19,11 +19,19 @@ type ProductController struct {
 
 func (p *ProductController) Retrieve(c *gin.Context) {
 
-	products := p.ucListProduct
+	products, err := p.ucListProduct.DisplayAll()
+	//blm tambain displayAll()
 
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"status":  "FAILED",
+			"message": "Error when creating Product",
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": "list of products",
-		"data":    products,
+		"status":  "SUCCESS",
+		"message": products,
 	})
 
 }
