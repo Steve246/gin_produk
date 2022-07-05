@@ -1,11 +1,10 @@
 package delivery
 
 import (
-	"fmt"
+	"gin_produk/config"
 	"gin_produk/delivery/controller"
 	"gin_produk/repo"
 	"gin_produk/usecase"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,12 +39,15 @@ func Server() *appServer {
 
 	listProdukUc := usecase.NewAllProductUsecase(productRepo)
 
-	apiHost := os.Getenv("API_HOST")
+	// apiHost := os.Getenv("API_HOST")
 	//host localhost
-	apiPort := os.Getenv("API_PORT")
+	// apiPort := os.Getenv("API_PORT")
 	//default port 8888
 
-	host := fmt.Sprintf("%s:%s", apiHost, apiPort)
+	c := config.NewConfig()
+	host := c.Url
+
+	// host := fmt.Sprintf("%s:%s", apiHost, apiPort)
 
 	return &appServer{
 		productUc:  productUc,
