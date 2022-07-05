@@ -8,7 +8,7 @@ import (
 
 type ProductRepository interface {
 	Add(newProduct *model.Product) error
-	RetrieveData() []model.Product
+	Retrieve() ([]model.Product, error)
 }
 
 type productRepository struct {
@@ -16,11 +16,13 @@ type productRepository struct {
 	db *gorm.DB
 }
 
-func (c *productRepository) RetrieveData() []model.Product {
+func (c *productRepository) Retrieve() ([]model.Product, error) {
 	var products []model.Product
-	c.db.Find(&products)
-
-	return products
+	err := c.db.Find(&products).Error
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
 }
 
 func (p *productRepository) Add(newProduct *model.Product) error {

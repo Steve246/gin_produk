@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"gin_produk/delivery/api"
 	"gin_produk/model"
 	"gin_produk/usecase"
 	"net/http"
@@ -13,13 +14,19 @@ type ProductController struct {
 	ucProduct usecase.CreateProductUsecase
 	//nambain buat list
 	ucListProduct usecase.AllProductUsecase
+	api.BaseApi
 }
 
 //nambain retrieve disini
 
 func (p *ProductController) Retrieve(c *gin.Context) {
 
-	products := p.ucListProduct.DisplayAll()
+	products, err := p.ucListProduct.DisplayAll()
+
+	if err != nil {
+		p.Failed(c, err)
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "list of products",

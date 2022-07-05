@@ -27,7 +27,6 @@ func NewSuccessMessage(data interface{}) (httpStatusCode int, apiResponse Respon
 		Data:   data,
 	}
 	return
-
 }
 
 func NewErrorMessage(err error) (httpStatusCode int, apiResponse Response) {
