@@ -17,27 +17,18 @@ type productRepository struct {
 }
 
 func (c *productRepository) RetrieveData() []model.Product {
-	// 	var products []model.Product
-	// 	// err := c.db.Find(&products)
-	// 	c.db.Find(&products)
-	// 	// if err != nil {
-	// 	// 	return nil, err
-	// 	// }
-	// 	// return products, nil
-	// 	return products
-	// }
+	var products []model.Product
+	c.db.Find(&products)
 
-	panic("error")
+	return products
 }
 
 func (p *productRepository) Add(newProduct *model.Product) error {
-	// err := p.db.Create(&newProduct).Error
-	// if err != nil {
-	// 	return err
-
-	// }
-	// return nil
-	panic("error")
+	err := p.db.Create(&newProduct).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func NewProductRepository(db *gorm.DB) ProductRepository {
