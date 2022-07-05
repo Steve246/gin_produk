@@ -11,15 +11,16 @@ import (
 )
 
 type appServer struct {
-	productUc usecase.CreateProductUsecase
-	engine    *gin.Engine
-	host      string
+	productUc  usecase.CreateProductUsecase
+	listProduk usecase.AllProductUsecase
+	engine     *gin.Engine
+	host       string
 }
 
 //nambain run biar bisa diakses dari luar
 
 func (a *appServer) iniController() {
-	controller.NewProductController(a.engine, a.productUc)
+	controller.NewProductController(a.engine, a.productUc, a.listProduk)
 }
 
 func (a *appServer) Run() {
@@ -37,6 +38,8 @@ func Server() *appServer {
 
 	productUc := usecase.NewCreateProductUseCase(productRepo)
 
+	listProdukUc := usecase.NewAllProductUsecase(productRepo)
+
 	apiHost := os.Getenv("API_HOST")
 	//host localhost
 	apiPort := os.Getenv("API_PORT")
@@ -45,8 +48,9 @@ func Server() *appServer {
 	host := fmt.Sprintf("%s:%s", apiHost, apiPort)
 
 	return &appServer{
-		productUc: productUc,
-		engine:    r,
-		host:      host,
+		productUc:  productUc,
+		listProduk: listProdukUc,
+		engine:     r,
+		host:       host,
 	}
 }

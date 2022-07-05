@@ -11,6 +11,21 @@ import (
 type ProductController struct {
 	router    *gin.Engine
 	ucProduct usecase.CreateProductUsecase
+	//nambain buat list
+	ucListProduct usecase.AllProductUsecase
+}
+
+//nambain retrieve disini
+
+func (p *ProductController) Retrieve(c *gin.Context) {
+
+	products := p.ucListProduct
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "list of products",
+		"data":    products,
+	})
+
 }
 
 func (p *ProductController) createNewProduct(c *gin.Context) {
@@ -37,14 +52,19 @@ func (p *ProductController) createNewProduct(c *gin.Context) {
 
 }
 
-func NewProductController(router *gin.Engine, ucProduct usecase.CreateProductUsecase) *ProductController {
+func NewProductController(router *gin.Engine, ucProduct usecase.CreateProductUsecase, ucList usecase.AllProductUsecase) *ProductController {
 	//disini akan terdapat kumpulan semua request method yang dibutuhkan
 	controller := ProductController{
-		router:    router,
-		ucProduct: ucProduct,
+		router:        router,
+		ucProduct:     ucProduct,
+		ucListProduct: ucList,
 	}
 
-	//ini method-method nya
+	//ini buat taro method-method nya
 	router.POST("/product", controller.createNewProduct)
+
+	//taro di retrieve
+	router.GET("/productList", controller.Retrieve)
+
 	return &controller
 }
