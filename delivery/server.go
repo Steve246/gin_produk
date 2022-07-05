@@ -22,8 +22,11 @@ type appServer struct {
 
 func Server() *appServer {
 	r := gin.Default()
+	appConfig := config.NewConfig()
 
-	repoManager := manager.NewRepositoryManager()
+	infra := manager.NewInfra(appConfig)
+
+	repoManager := manager.NewRepositoryManager(infra)
 
 	useCaseManager := manager.NewUseCaseManager(repoManager)
 
@@ -32,8 +35,7 @@ func Server() *appServer {
 	// apiPort := os.Getenv("API_PORT")
 	//default port 8888
 
-	c := config.NewConfig()
-	host := c.Url
+	host := appConfig.Url
 
 	// host := fmt.Sprintf("%s:%s", apiHost, apiPort)
 

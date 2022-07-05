@@ -2,7 +2,9 @@ package manager
 
 import (
 	"gin_produk/config"
+	"gin_produk/model"
 	"log"
+	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -20,21 +22,26 @@ func (i *infra) SqlDb() *gorm.DB {
 	return i.db
 }
 
-func NewInfra(config *config.Config) Infra {
+func NewInfra(config config.Config) Infra {
 	resource, err := initDbResource(config.DataSourceName)
-
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 	return &infra{db: resource}
 }
 
-func initDbResource(DataSourceName string) (*gorm.DB, error) {
-	db, err := gorm.Open(postgres.Open(DataSourceName), &gorm.Config{})
+func initDbResource(dataSourceName string) (*gorm.DB, error) {
+	db, err := gorm.Open(postgres.Open(dataSourceName), &gorm.Config{})
 
+	env := os.Getenv("ENV")
+	if env == "migration" {
+		db.Debug()
+		db.AutoMigrate(&model.Product{})
+	} else if env == "dev" {
+		db.Debug()
+	}
 	if err != nil {
 		return nil, err
 	}
 	return db, nil
-
 }
