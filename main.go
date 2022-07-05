@@ -1,8 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"gin_produk/delivery"
+)
 
 func main() {
-	fmt.Println("test")
+	delivery.Server().Run()
 
 }
